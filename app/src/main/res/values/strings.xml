@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Disherv1</string>
+    <string name="addTxt">Add Dish</string>
+    <string name="heading">Your current dishes:</string>
+    <string name = "positiveTxt">YES, DELETE</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirmDialog">Do you want to delete this item? </string>
+    <string name="save">Save</string>
+    <string name="hint_for_dish_name">Enter name of dish here </string>
+    <string name="hint_for_ingredient_name">Enter names of ingredient here </string>
+
+</resources>

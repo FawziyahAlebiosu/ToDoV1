@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".addDish">
+
+    <EditText
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:hint="@string/hint_for_dish_name"
+    android:id="@+id/enterName"/>
+
+    <EditText
+        android:id="@+id/enterIngredient"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:hint="@string/hint_for_ingredient_name"
+       android:layout_marginBottom="200dp" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="@+id/enterName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
