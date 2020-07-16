@@ -8,16 +8,39 @@
 
 
     <Button
-                    android:id="@+id/addbtn"
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:text= "@string/addTxt"
-                    android:layout_marginLeft="200dp"
-                    android:layout_marginTop="600dp"/>
+        android:id="@+id/addbtn"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+
+        android:text="@string/addTxt" />
+
+    <EditText
+        android:id="@+id/enterToDo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginStart="19dp"
+
+        android:layout_marginEnd="-2dp"
+
+        android:layout_marginBottom="11dp"
+        android:layout_toStartOf="@+id/addbtn"
+        android:hint="@string/hint_for_todo" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="371dp"
+        android:layout_above="@+id/enterToDo"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="43dp"
+        android:layout_marginBottom="298dp"
+        android:id="@+id/listOfItems" />
 
 
 </android.widget.RelativeLayout>
