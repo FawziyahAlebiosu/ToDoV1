@@ -1,19 +1,29 @@
 package com.example.android.disherv1;
-import android.content.DialogInterface;
-import android.content.Intent;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
-    ListView listView;
-    ArrayList<String> dishesNames = new ArrayList<>();
-    ArrayAdapter<String> dishAdapter;
+    ArrayList<String> todoItems;
+    Button addItemBtn;
+    EditText enterItem;
+    RecyclerView lists;
+    itemAdapter itemAdapter;
 
 
     @Override
@@ -21,56 +31,63 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       listView = findViewById(R.id.dishNames);
-       dishAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dishesNames);
-        dishAdapter.notifyDataSetChanged();
-        dishesNames.add(getString(R.string.heading));
-        dishAdapter.notifyDataSetChanged();
-        listView.setAdapter(dishAdapter);
+        addItemBtn = findViewById(R.id.addbtn);
+        enterItem = findViewById(R.id.enterToDo);
+        lists = findViewById(R.id.listOfItems);
 
-        findViewById(R.id.addbtn).setOnClickListener(new View.OnClickListener() {
+        loadItems();
+
+        itemAdapter.OnLongClickListener onLongClickListener = new itemAdapter.OnLongClickListener(){
+            @Override
+            public void onItemLongClicked(int position){
+                todoItems.remove(position);
+                itemAdapter.notifyItemRemoved(position);
+                Toast.makeText(getApplicationContext(), "Item deleted successfully", Toast.LENGTH_LONG).show();
+                writeItems();
+            }
+        };
+         itemAdapter = new itemAdapter(todoItems, onLongClickListener);
+        //construct adapter
+
+        lists.setAdapter(itemAdapter);
+        lists.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+        addItemBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go from mainactivity to adddish to get the name!
-                Intent intent = new Intent(MainActivity.this, addDish.class);
-                MainActivity.this.startActivityForResult(intent, 100);
-
+                //grab the item in edit text and save it!
+                String entered = enterItem.getText().toString();
+                todoItems.add(entered);
+                itemAdapter.notifyItemInserted(todoItems.size()-1);
+                enterItem.setText("");
+                Toast.makeText(getApplicationContext(), "Item added successfully",Toast.LENGTH_LONG).show();
+                writeItems();
             }
         });
 
-
-       listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final int toRemove = i;
-                AlertDialog.Builder confirmDelete = new AlertDialog.Builder(MainActivity.this);
-                confirmDelete.setMessage(getString(R.string.confirmDialog))
-                        .setPositiveButton(getString(R.string.positiveTxt), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dishesNames.remove(toRemove);
-                                dishAdapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.cancel), null);
-                confirmDelete.show();
-            return true;
-            }
-
-        });
+    }
+    private File getDataFile(){
+        //returns file that will store todo items
+        return new File(getFilesDir(), "todo.txt");
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
-            String dishName = data.getExtras().getString("name");
-            String dishIngredient = data.getExtras().getString("ingredient_One");
-            dishesNames.add(dishName);
-            dishAdapter.notifyDataSetChanged();
-            dishesNames.add(dishIngredient);
-            dishAdapter.notifyDataSetChanged();
-
+    //function that will load items
+    private void loadItems() {
+        try {
+            todoItems = new ArrayList<>(FileUtils.readLines(getDataFile(), Charset.defaultCharset()));
+        } catch (IOException e) {
+            Log.e("MainActivity", "error getting stuff", e);
+            todoItems = new ArrayList<>();
+        }
+    }
+    //functions that will write the actual file
+    private void writeItems() {
+        try {
+            FileUtils.writeLines(getDataFile(), todoItems);
+        } catch (IOException e) {
+            Log.e("MainActivity", "error writing stuff", e);
         }
     }
 }
